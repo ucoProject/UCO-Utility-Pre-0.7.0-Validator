@@ -1,0 +1,286 @@
+{
+    "@context": {
+        "@vocab": "http://example.org/local#",
+        "": "http://example.org/kb#",
+        "acme": "http://custompb.acme.org/core#",
+        "draft": "http://example.org/draft#",
+        "uco-core": "https://unifiedcyberontology.org/ontology/uco/core#",
+        "uco-observable": "https://unifiedcyberontology.org/ontology/uco/observable#",
+        "uco-types": "https://unifiedcyberontology.org/ontology/uco/types#",
+        "uco-vocabulary": "https://unifiedcyberontology.org/ontology/uco/vocabulary#",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": ":relationship0",
+            "@type": "uco-observable:CyberRelationship",
+            "uco-core:source": ":multipart_file",
+            "uco-core:target": ":data_piece0",
+            "uco-core:kindOfRelationship": "has-fragment",
+            "uco-core:isDirectional": true,
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:Fragment",
+                    "uco-observable:fragmentIndex": 0,
+                    "totalFragments": 3
+                }
+            ]
+        },
+        {
+            "@id": ":relationship1",
+            "@type": "uco-observable:CyberRelationship",
+            "uco-core:source": ":multipart_file",
+            "uco-core:target": ":data_piece1",
+            "uco-core:kindOfRelationship": "has-fragment",
+            "uco-core:isDirectional": true,
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:Fragment",
+                    "uco-observable:fragmentIndex": 1,
+                    "totalFragments": 3
+                }
+            ]
+        },
+        {
+            "@id": ":relationship2",
+            "@type": "uco-observable:CyberRelationship",
+            "uco-core:source": ":multipart_file",
+            "uco-core:target": ":data_piece2",
+            "uco-core:kindOfRelationship": "has-fragment",
+            "uco-core:isDirectional": true,
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:Fragment",
+                    "uco-observable:fragmentIndex": 2,
+                    "totalFragments": 3
+                }
+            ]
+        },
+        {
+            "@id": ":multipart_file",
+            "@type": "uco-observable:CyberItem",
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:ContentData",
+                    "uco-observable:byteOrder": "BigEndian",
+                    "uco-observable:sizeInBytes": {
+                        "@type": "xsd:long",
+                        "@value": 30
+                    },
+                    "uco-observable:dataPayload": "<base 64 encoded data of the file>",
+                    "uco-observable:hash": [
+                        {
+                            "@type": "uco-types:Hash",
+                            "uco-types:hashMethod": {
+                                "@type": "uco-vocabulary:HashNameVocab",
+                                "@value": "SHA256"
+                            },
+                            "uco-types:hashValue": {
+                                "@type": "xsd:hexBinary",
+                                "@value": "15e2b0d3c33891ebb0f1ef609ec419420c20e320ce94c65fbc8c3312448eb225"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "@id": ":data_piece0",
+            "@type": "uco-observable:CyberItem",
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:File",
+                    "uco-observable:fileSystemType": "EXT4",
+                    "uco-observable:filePath": "/data/data/multipart_file.001",
+                    "uco-observable:modifiedTime": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2010-01-15T17:59:43.25Z"
+                    },
+                    "accessedAction": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2010-01-15T17:59:43.25Z"
+                    },
+                    "createdAction": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2010-01-15T17:59:43.25Z"
+                    },
+                    "uco-observable:sizeInBytes": {
+                        "@type": "xsd:long",
+                        "@value": 10
+                    }
+                },
+                {
+                    "@type": "uco-observable:ContentData",
+                    "uco-observable:byteOrder": "BigEndian",
+                    "uco-observable:sizeInBytes": {
+                        "@type": "xsd:long",
+                        "@value": 10
+                    },
+                    "uco-observable:dataPayload": "<base 64 encoded data of the file>",
+                    "uco-observable:hash": [
+                        {
+                            "@type": "uco-types:Hash",
+                            "uco-types:hashMethod": {
+                                "@type": "uco-vocabulary:HashNameVocab",
+                                "@value": "SHA256"
+                            },
+                            "uco-types:hashValue": {
+                                "@type": "xsd:hexBinary",
+                                "@value": "2943a567bc05bc66ca6201dbc5f00bec3f774a47b1b94289a2ae8e79834c21a5"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "@id": ":data_piece1",
+            "@type": "uco-observable:CyberItem",
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:File",
+                    "uco-observable:fileSystemType": "EXT4",
+                    "uco-observable:filePath": "/data/data/multipart_file.002",
+                    "uco-observable:modifiedTime": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2010-01-15T17:59:43.25Z"
+                    },
+                    "accessAction": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2010-01-15T17:59:43.25Z"
+                    },
+                    "createAction": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2010-01-15T17:59:43.25Z"
+                    },
+                    "uco-observable:sizeInBytes": {
+                        "@type": "xsd:long",
+                        "@value": 10
+                    }
+                },
+                {
+                    "@type": "uco-observable:ContentData",
+                    "uco-observable:byteOrder": "BigEndian",
+                    "uco-observable:sizeInBytes": {
+                        "@type": "xsd:long",
+                        "@value": 10
+                    },
+                    "uco-observable:dataPayload": "<base 64 encoded data of the file>",
+                    "uco-observable:hash": [
+                        {
+                            "@type": "uco-types:Hash",
+                            "uco-types:hashMethod": {
+                                "@type": "uco-vocabulary:HashNameVocab",
+                                "@value": "SHA256"
+                            },
+                            "uco-types:hashValue": {
+                                "@type": "xsd:hexBinary",
+                                "@value": "882b8486a082615ea7fbbba8b8e7082ac8b3a94c9e152fc0920b715edf02cb15"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "@id": ":data_piece2",
+            "@type": "uco-observable:CyberItem",
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:File",
+                    "uco-observable:fileSystemType": "EXT4",
+                    "uco-observable:filePath": "/data/data/multipart_file.003",
+                    "uco-observable:modifiedTime": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2010-01-15T17:59:43.25Z"
+                    },
+                    "accessAction": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2010-01-15T17:59:43.25Z"
+                    },
+                    "createAction": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2010-01-15T17:59:43.25Z"
+                    },
+                    "uco-observable:sizeInBytes": {
+                        "@type": "xsd:long",
+                        "@value": 10
+                    }
+                },
+                {
+                    "@type": "uco-observable:ContentData",
+                    "uco-observable:byteOrder": "BigEndian",
+                    "uco-observable:sizeInBytes": {
+                        "@type": "xsd:long",
+                        "@value": 10
+                    },
+                    "uco-observable:dataPayload": "<base 64 encoded data of the file>",
+                    "uco-observable:hash": [
+                        {
+                            "@type": "uco-types:Hash",
+                            "uco-types:hashMethod": {
+                                "@type": "uco-vocabulary:HashNameVocab",
+                                "@value": "SHA256"
+                            },
+                            "uco-types:hashValue": {
+                                "@type": "xsd:hexBinary",
+                                "@value": "c2608309ab2e636950109918e5de24526e3ad9053311859b168cee8606c9d3e2"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "@id": ":relationship3",
+            "@type": "uco-observable:CyberRelationship",
+            "uco-core:source": ":data_piece0",
+            "uco-core:target": ":android_image",
+            "uco-core:kindOfRelationship": {
+                "@type": "uco-observable:CyberItemRelationshipEnum",
+                "@value": "Contained_Within"
+            },
+            "uco-core:isDirectional": true,
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:PathRelation",
+                    "uco-observable:path": "/data/data/multipart_file.001"
+                }
+            ]
+        },
+        {
+            "@id": ":relationship4",
+            "@type": "uco-observable:CyberRelationship",
+            "uco-core:source": ":data_piece1",
+            "uco-core:target": ":android_image",
+            "uco-core:kindOfRelationship": {
+                "@type": "uco-observable:CyberItemRelationshipEnum",
+                "@value": "Contained_Within"
+            },
+            "uco-core:isDirectional": true,
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:PathRelation",
+                    "uco-observable:path": "/data/data/multipart_file.002"
+                }
+            ]
+        },
+        {
+            "@id": ":relationship5",
+            "@type": "uco-observable:CyberRelationship",
+            "uco-core:source": ":data_piece2",
+            "uco-core:target": ":android_image",
+            "uco-core:kindOfRelationship": {
+                "@type": "uco-observable:CyberItemRelationshipEnum",
+                "@value": "Contained_Within"
+            },
+            "uco-core:isDirectional": true,
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:PathRelation",
+                    "uco-observable:path": "/data/data/multipart_file.003"
+                }
+            ]
+        }
+    ]
+}

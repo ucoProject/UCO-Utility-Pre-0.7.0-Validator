@@ -1,0 +1,54 @@
+# baseURI: https://unifiedcyberontology.org/ontology/uco/pattern
+# imports: https://unifiedcyberontology.org/ontology/uco/core
+
+@base <https://unifiedcyberontology.org/ontology/uco/pattern> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix pattern: <https://unifiedcyberontology.org/ontology/uco/pattern#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://unifiedcyberontology.org/ontology/uco/pattern>
+	a owl:Ontology ;
+	rdfs:label "uco-pattern"@en ;
+	owl:imports <https://unifiedcyberontology.org/ontology/uco/core> ;
+	.
+
+pattern:LogicalPattern
+	a owl:Class ;
+	rdfs:subClassOf
+		pattern:Pattern ,
+		[
+			a owl:Restriction ;
+			owl:onProperty pattern:patternExpression ;
+			owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+			owl:onDataRange pattern:PatternExpression ;
+		]
+		;
+	rdfs:label "LogicalPattern"@en ;
+	rdfs:comment "An informational pattern instantiated in UCO content and expressed as a logical pattern expression."@en ;
+	.
+
+pattern:Pattern
+	a owl:Class ;
+	rdfs:subClassOf <https://unifiedcyberontology.org/ontology/uco/core#UcoObject> ;
+	rdfs:label "Pattern"@en ;
+	rdfs:comment
+		"A combination of properties, acts, tendencies, etc., forming a consistent or characteristic arrangement."@en ,
+		"An explicit logical specification of a UCO informational pattern."@en
+		;
+	.
+
+pattern:PatternExpression
+	a owl:Class ;
+	rdfs:label "PatternExpression"@en ;
+	rdfs:comment "An explicit logical pattern expression."@en ;
+	.
+
+pattern:patternExpression
+	a owl:DatatypeProperty ;
+	rdfs:label "patternExpression"@en ;
+	rdfs:comment "An explicit logical pattern expression."@en ;
+	rdfs:range pattern:PatternExpression ;
+	.
+

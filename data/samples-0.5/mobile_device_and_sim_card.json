@@ -1,0 +1,119 @@
+{
+    "@context": {
+        "@vocab": "http://example.org/local#",
+        "kb": "http://example.org/kb#",
+        "acme": "http://custompb.acme.org/core#",
+        "draft": "http://example.org/draft#",
+        "olo": "http://purl.org/ontology/olo/core#",
+        "uco-core": "https://unifiedcyberontology.org/ontology/uco/core#",
+        "uco-observable": "https://unifiedcyberontology.org/ontology/uco/observable#",
+        "case-vocabulary": "https://caseontology.org/ontology/case/vocabulary#",
+        "uco-vocabulary": "https://unifiedcyberontology.org/ontology/uco/vocabulary#"
+    },
+    "@graph": [
+        {
+            "@id": "kb:mobile-device-uuid",
+            "@type": "uco-observable:ObservableObject",
+            "uco-core:hasFacet": [
+                {
+                    "@type": "uco-observable:DeviceFacet",
+                    "uco-core:name": "iPhone",
+                    "uco-observable:model": "MG472ZD/A",
+                    "uco-observable:serialNumber": "F17RN4DXXXXX"
+                },
+                {
+                    "@type": "uco-observable:OperatingSystemFacet",
+                    "uco-core:name": "iOS",
+                    "uco-observable:manufacturer": "Apple",
+                    "uco-observable:version": "11.2.6"
+                },
+                {
+                    "@type": "iPhoneDevice",
+                    "uniqueID": "B3858A69A29375E6C706226B3633A3A11EB2A774",
+                    "ownerName": "Johnsons iPhone"
+                },
+                {
+                    "@type": "uco-observable:MobileDeviceFacet",
+                    "uco-observable:keypadUnlockCode": "123456",
+                    "uco-observable:IMEI": "35540607448XXXX",
+                    "MSISDN": [
+                        "kb:mobile-account1-uuid"
+                    ],
+                    "uco-observable:clockSetting": "2018-02-24T07:36:24.35Z",
+                    "timezoneSetting": "UTC+01:01 (Europe/Rome)",
+                    "uco-observable:storageCapacityInBytes": {
+                        "@type": "xsd:long",
+                        "@value": "17179869184"
+                    }
+                },
+                {
+                    "@type": "uco-observable:BluetoothAddressFacet",
+                    "uco-observable:addressValue": "DC:41:5F:44:48:24"
+                },
+                {
+                    "@type": "uco-observable:WifiAddressFacet",
+                    "uco-observable:addressValue": "DC:41:5F:44:48:25"
+                }
+            ]
+        },
+        {
+            "@id": "kb:trace-relationship1-uuid",
+            "@type": "uco-observable:ObservableRelationship",
+            "uco-core:source": "kb:sim-card-uuid",
+            "uco-core:target": [
+                "kb:mobile-device-uuid"
+            ],
+            "uco-core:kindOfRelationship": {
+                "@type": "uco-observable:ObservableObjectRelationshipEnum",
+                "@value": "Contained_Within"
+            },
+            "uco-core:isDirectional": true
+        },
+        {
+            "@id": "kb:sim-card-uuid",
+            "@type": "uco-observable:ObservableObject",
+            "uco-core:hasFacet": [
+                {
+                    "@type": "uco-observable:SIMCardFacet",
+                    "uco-observable:ICCID": "456673345673436xxx",
+                    "IMSI": [
+                        "kb:mobile-account2-uuid"
+                    ],
+                    "uco-observable:SIMType": "USIM",
+                    "uco-observable:SIMForm": "micro",
+                    "uco-observable:carrier": "Vodafone"
+                }
+            ]
+        },
+        {
+            "@id": "kb:mobile-account1-uuid",
+            "@type": "uco-observable:ObservableObject",
+            "uco-core:hasFacet": [
+                {
+                    "@type": "uco-observable:AccountFacet",
+                    "uco-observable:accountType": "Phone",
+                    "uco-observable:isActive": true
+                },
+                {
+                    "@type": "uco-observable:MobileAccountFacet",
+                    "uco-observable:MSISDN": "31618300XXX"
+                }
+            ]
+        },
+        {
+            "@id": "kb:mobile-account2-uuid",
+            "@type": "uco-observable:ObservableObject",
+            "uco-core:hasFacet": [
+                {
+                    "@type": "uco-observable:AccountFacet",
+                    "uco-observable:accountType": "Phone",
+                    "uco-observable:isActive": true
+                },
+                {
+                    "@type": "uco-observable:MobileAccountFacet",
+                    "uco-observable:IMSI": "12345678910112"
+                }
+            ]
+        }
+    ]
+}

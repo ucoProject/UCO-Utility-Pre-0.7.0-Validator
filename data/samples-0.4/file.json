@@ -1,0 +1,526 @@
+{
+    "@context": {
+        "@vocab": "http://example.org/local#",
+        "": "http://example.org/kb#",
+        "acme": "http://custompb.acme.org/core#",
+        "draft": "http://example.org/draft#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "uco-core": "https://unifiedcyberontology.org/ontology/uco/core#",
+        "uco-observable": "https://unifiedcyberontology.org/ontology/uco/observable#",
+        "uco-types": "https://unifiedcyberontology.org/ontology/uco/types#",
+        "uco-vocabulary": "https://unifiedcyberontology.org/ontology/uco/vocabulary#",
+        "xsd": "http://www.w3.org/2001/XMLSchema#"
+    },
+    "@graph": [
+        {
+            "@id": ":chunk_of_data",
+            "@type": "uco-observable:CyberItem",
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:ContentData",
+                    "uco-observable:byteOrder": "BigEndian",
+                    "uco-observable:sizeInBytes": {
+                        "@type": "xsd:long",
+                        "@value": "29"
+                    },
+                    "uco-observable:dataPayload": "Q0FTRSBpcyBhbiBhd2Vzb21lIG9udG9sb2d5IQ=",
+                    "uco-observable:hash": [
+                        {
+                            "@type": "uco-types:Hash",
+                            "uco-types:hashMethod": {
+                                "@type": "uco-vocabulary:HashNameVocab",
+                                "@value": "SHA256"
+                            },
+                            "uco-types:hashValue": {
+                                "@type": "xsd:hexBinary",
+                                "@value": "6b51d431df5d7f141cbececcf79edf3dd861c3b4069f0b11661a3eefacbba918"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "@id": ":relationship0",
+            "@type": "uco-observable:CyberRelationship",
+            "uco-core:source": ":chunk_of_data",
+            "uco-core:target": ":decoded_attachment",
+            "uco-core:kindOfRelationship": {
+                "@type": "uco-observable:CyberItemRelationshipEnum",
+                "@value": "Contained_Within"
+            },
+            "uco-core:isDirectional": true,
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:DataRange",
+                    "uco-observable:rangeOffset": 45,
+                    "uco-observable:rangeSize": {
+                        "@type": "xsd:long",
+                        "@value": 29
+                    }
+                }
+            ]
+        },
+        {
+            "@id": ":decoded_attachment",
+            "@type": "uco-observable:CyberItem",
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:ContentData",
+                    "uco-observable:byteOrder": "BigEndian",
+                    "uco-observable:sizeInBytes": {
+                        "@type": "xsd:long",
+                        "@value": "3500"
+                    },
+                    "uco-observable:magicNumber": "/9j/ww==",
+                    "uco-observable:mimeType": "image/jpg",
+                    "uco-observable:dataPayload": "<base 64 encoded data of the file>",
+                    "uco-observable:hash": [
+                        {
+                            "@type": "uco-types:Hash",
+                            "uco-types:hashMethod": {
+                                "@type": "uco-vocabulary:HashNameVocab",
+                                "@value": "MD5"
+                            },
+                            "uco-types:hashValue": {
+                                "@type": "xsd:hexBinary",
+                                "@value": "3d137a188c1e82247b815209ce44af2c"
+                            }
+                        },
+                        {
+                            "@type": "uco-types:Hash",
+                            "uco-types:hashMethod": {
+                                "@type": "uco-vocabulary:HashNameVocab",
+                                "@value": "SHA256"
+                            },
+                            "uco-types:hashValue": {
+                                "@type": "xsd:hexBinary",
+                                "@value": "8c8b39473c4064f6b4db11a67251ffdf65c42ebadc5c3e02a009f95f6cf7c9e8"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "@id": ":relationship1",
+            "@type": "uco-observable:CyberRelationship",
+            "uco-core:source": ":decoded_attachment",
+            "uco-core:target": ":tar_archive_file",
+            "uco-core:kindOfRelationship": "decoded-from",
+            "uco-core:isDirectional": true,
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:EncodedStream",
+                    "uco-observable:encodingMethod": "BASE64"
+                }
+            ]
+        },
+        {
+            "@id": ":tar_archive_file",
+            "@type": "uco-observable:CyberItem",
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:File",
+                    "uco-observable:fileSystemType": "TAR",
+                    "uco-observable:filePath": "/some/files/in/archive/attachment.jpg",
+                    "uco-observable:accessedTime": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2009-01-15T17:59:43.25Z"
+                    },
+                    "uco-observable:createdTime": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2009-01-15T17:59:43.25Z"
+                    },
+                    "uco-observable:modifiedTime": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2009-01-15T17:59:43.25Z"
+                    }
+                },
+                {
+                    "@type": "uco-observable:ContentData",
+                    "uco-observable:sizeInBytes": {
+                        "@type": "xsd:long",
+                        "@value": 23000
+                    },
+                    "uco-observable:dataPayload": "<base 64 encoded data of the file>",
+                    "uco-observable:hash": [
+                        {
+                            "@type": "uco-types:Hash",
+                            "uco-types:hashMethod": {
+                                "@type": "uco-vocabulary:HashNameVocab",
+                                "@value": "SHA256"
+                            },
+                            "uco-types:hashValue": {
+                                "@type": "xsd:hexBinary",
+                                "@value": "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "@type": "uco-observable:EncodedStream",
+                    "uco-observable:encodingMethod": "BASE64"
+                }
+            ]
+        },
+        {
+            "@id": ":relationship2",
+            "@type": "uco-observable:CyberRelationship",
+            "uco-core:source": ":tar_archive_file",
+            "uco-core:target": ":decrypted_blob",
+            "uco-core:kindOfRelationship": {
+                "@type": "uco-observable:CyberItemRelationshipEnum",
+                "@value": "Contained_Within"
+            },
+            "uco-core:isDirectional": true,
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:PathRelation",
+                    "uco-observable:path": "/some/files/in/archive/attachment.jpg"
+                }
+            ]
+        },
+        {
+            "@id": ":decrypted_blob",
+            "@type": "uco-observable:CyberItem",
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:ContentData",
+                    "uco-observable:sizeInBytes": {
+                        "@type": "xsd:long",
+                        "@value": "23000"
+                    },
+                    "uco-observable:dataPayload": "<base 64 encoded data of the file>",
+                    "uco-observable:magicNumber": "NzUgNzMgNzQgNjEgNzI=",
+                    "uco-observable:mimeType": "application/x-tar",
+                    "uco-observable:hash": [
+                        {
+                            "@type": "uco-types:Hash",
+                            "uco-types:hashMethod": {
+                                "@type": "uco-vocabulary:HashNameVocab",
+                                "@value": "SHA256"
+                            },
+                            "uco-types:hashValue": {
+                                "@type": "xsd:hexBinary",
+                                "@value": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "@id": ":relationship3",
+            "@type": "uco-observable:CyberRelationship",
+            "uco-core:source": ":decrypted_blob",
+            "uco-core:target": ":sqlite_blob",
+            "uco-core:kindOfRelationship": "decrypted-from",
+            "uco-core:isDirectional": true,
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:EncryptedStream",
+                    "uco-observable:encryptionMethod": "AES",
+                    "uco-observable:encryptionMode": "CBC",
+                    "uco-observable:encryptionKey": "whatsappKEY",
+                    "uco-observable:encryptionIV": "whatsappIV"
+                }
+            ]
+        },
+        {
+            "@id": ":sqlite_blob",
+            "@type": "uco-observable:CyberItem",
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:ContentData",
+                    "uco-observable:sizeInBytes": {
+                        "@type": "xsd:long",
+                        "@value": "54000"
+                    },
+                    "uco-observable:dataPayload": "<base 64 encoded data of the file>",
+                    "uco-observable:hash": [
+                        {
+                            "@type": "uco-types:Hash",
+                            "uco-types:hashMethod": {
+                                "@type": "uco-vocabulary:HashNameVocab",
+                                "@value": "SHA256"
+                            },
+                            "uco-types:hashValue": {
+                                "@type": "xsd:hexBinary",
+                                "@value": "5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "@type": "uco-observable:EncryptedStream",
+                    "uco-observable:encryptionMethod": "AES",
+                    "uco-observable:encryptionMode": "CBC",
+                    "uco-observable:encryptionKey": "whatsappKEY",
+                    "uco-observable:encryptionIV": "whatsappIV"
+                }
+            ]
+        },
+        {
+            "@id": ":relationship4",
+            "@type": "uco-observable:CyberRelationship",
+            "uco-core:source": ":sqlite_blob",
+            "uco-core:target": ":sqlite_database",
+            "uco-core:kindOfRelationship": {
+                "@type": "uco-observable:CyberItemRelationshipEnum",
+                "@value": "Contained_Within"
+            },
+            "uco-core:isDirectional": true,
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:SQLiteBlob",
+                    "uco-observable:tableName": "AttachmentTable",
+                    "uco-observable:columnName": "data",
+                    "uco-observable:rowCondition": "pk_id == 5"
+                }
+            ]
+        },
+        {
+            "@id": ":sqlite_database",
+            "@type": "uco-observable:CyberItem",
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:File",
+                    "uco-observable:fileSystemType": "EXT4",
+                    "uco-observable:isDirectory": false,
+                    "uco-observable:filePath": "/data/data/com.whatsapp/cache/messages.db",
+                    "uco-observable:fileName": "messages.db",
+                    "uco-observable:extension": "db",
+                    "uco-observable:modifiedTime": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2010-01-15T17:59:43.25Z"
+                    },
+                    "uco-observable:accessedTime": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2010-01-15T17:59:43.25Z"
+                    },
+                    "uco-observable:createdTime": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2010-01-15T17:59:43.25Z"
+                    },
+                    "uco-observable:sizeInBytes": {
+                        "@type": "xsd:long",
+                        "@value": 546000
+                    }
+                },
+                {
+                    "@type": "uco-observable:ContentData",
+                    "uco-observable:sizeInBytes": {
+                        "@type": "xsd:long",
+                        "@value": 546000
+                    },
+                    "uco-observable:dataPayload": "<base 64 encoded data of the file>",
+                    "uco-observable:magicNumber": "U1FMaXRlIGZvcm1hdCAzAA==",
+                    "uco-observable:hash": [
+                        {
+                            "@type": "uco-types:Hash",
+                            "uco-types:hashMethod": {
+                                "@type": "uco-vocabulary:HashNameVocab",
+                                "@value": "SHA256"
+                            },
+                            "uco-types:hashValue": {
+                                "@type": "xsd:hexBinary",
+                                "@value": "8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "@id": ":relationship5",
+            "@type": "uco-observable:CyberRelationship",
+            "uco-core:source": ":sqlite_database",
+            "uco-core:target": ":image_partition",
+            "uco-core:kindOfRelationship": {
+                "@type": "uco-observable:CyberItemRelationshipEnum",
+                "@value": "Contained_Within"
+            },
+            "uco-core:isDirectional": true,
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:PathRelation",
+                    "uco-observable:path": "/data/data/com.whatsapp/cache/messages.db"
+                }
+            ]
+        },
+        {
+            "@id": ":image_partition",
+            "@type": "uco-observable:CyberItem",
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:ContentData",
+                    "uco-observable:sizeInBytes": {
+                        "@type": "xsd:long",
+                        "@value": "45654000"
+                    },
+                    "uco-observable:hash": [
+                        {
+                            "@type": "uco-types:Hash",
+                            "uco-types:hashMethod": {
+                                "@type": "uco-vocabulary:HashNameVocab",
+                                "@value": "SHA256"
+                            },
+                            "uco-types:hashValue": {
+                                "@type": "xsd:hexBinary",
+                                "@value": "8bb0cf6eb9b17d0f7d22b456f121257dc1254e1f01665370476383ea776df414"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "@id": ":relationship6",
+            "@type": "uco-observable:CyberRelationship",
+            "uco-core:source": ":image_partition",
+            "uco-core:target": ":android_image",
+            "uco-core:kindOfRelationship": {
+                "@type": "uco-observable:CyberItemRelationshipEnum",
+                "@value": "Contained_Within"
+            },
+            "uco-core:isDirectional": true,
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:DiskPartition",
+                    "uco-observable:partitionID": 3
+                }
+            ]
+        },
+        {
+            "@id": ":android_image",
+            "@type": "uco-observable:CyberItem",
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:File",
+                    "uco-observable:fileSystemType": "NTFS",
+                    "uco-observable:isDirectory": false,
+                    "uco-observable:extension": "img",
+                    "uco-observable:fileName": "DFL-20140712-001C.img",
+                    "uco-observable:filePath": "C:/input_devices/DFL-20140712-001C.img",
+                    "uco-observable:modifiedTime": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2010-01-15T17:59:43.25Z"
+                    },
+                    "accessedAction": "2010-01-15T17:59:43.25Z",
+                    "createdAction": "2010-01-15T17:59:43.25Z",
+                    "uco-observable:metadataChangeTime": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2010-01-15T17:59:43.25Z"
+                    }
+                },
+                {
+                    "@type": "uco-observable:ContentData",
+                    "uco-observable:sizeInBytes": {
+                        "@type": "xsd:long",
+                        "@value": "45654000"
+                    },
+                    "uco-observable:hash": [
+                        {
+                            "@type": "uco-types:Hash",
+                            "uco-types:hashMethod": {
+                                "@type": "uco-vocabulary:HashNameVocab",
+                                "@value": "SHA256"
+                            },
+                            "uco-types:hashValue": {
+                                "@type": "xsd:hexBinary",
+                                "@value": "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "@id": ":relationship7",
+            "@type": "uco-observable:CyberRelationship",
+            "uco-core:source": ":android_image",
+            "uco-core:target": ":forensic_lab_computer1",
+            "uco-core:kindOfRelationship": "stored-on",
+            "uco-core:isDirectional": true,
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:PathRelation",
+                    "uco-observable:path": "C:/input_devices/DFL-20140712-001C.img"
+                }
+            ]
+        },
+        {
+            "@id": ":relationship8",
+            "@type": "uco-observable:CyberRelationship",
+            "uco-core:source": ":android_image",
+            "uco-core:target": ":android_device1",
+            "uco-core:kindOfRelationship": "forensic_image_of",
+            "uco-core:isDirectional": true
+        },
+        {
+            "@id": ":forensic_lab_computer1",
+            "@type": "uco-observable:CyberItem",
+            "rdfs:comment": "TODO: This is an inappropriate placement for the location property (both uco-action:location and uco-observable:location).  Need another way to attach :forensic_lab1.",
+            "uco-observable:location": ":forensic_lab1",
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:Device",
+                    "uco-observable:manufacturer": "Dell",
+                    "uco-observable:model": "Inspiron 5000",
+                    "uco-observable:serialNumber": "D1234567"
+                },
+                {
+                    "@type": "uco-observable:OperatingSystem",
+                    "uco-core:name": "Windows 7 Ultimate Edition",
+                    "uco-observable:manufacturer": "Microsoft",
+                    "uco-observable:version": "6.1.7601 Service Pack 1 Build 7601"
+                },
+                {
+                    "@type": "uco-observable:ComputerSpecification",
+                    "uco-observable:biosVersion": "E1762IMS.10M",
+                    "uco-observable:cpuFamily": "Intel Pentium i7",
+                    "uco-observable:totalRam": {
+                        "@type": "xsd:long",
+                        "@value": "4294967296"
+                    }
+                },
+                {
+                    "@type": "acme:InventoryComputer",
+                    "acme:name": "DFL-03",
+                    "acme:inventoryNumber": "10503"
+                }
+            ]
+        },
+        {
+            "@id": ":android_device1",
+            "@type": "uco-observable:CyberItem",
+            "rdfs:comment": "TODO: This is an inappropriate placement for the location property (both uco-action:location and uco-observable:location).  Need another way to attach :forensic_lab1.",
+            "uco-observable:location": ":forensic_lab1",
+            "uco-core:facets": [
+                {
+                    "@type": "uco-observable:Device",
+                    "uco-observable:manufacturer": "Samsung",
+                    "uco-observable:model": "I9500 Galaxy S4",
+                    "uco-observable:serialNumber": "123456SAM"
+                },
+                {
+                    "@type": "uco-observable:OperatingSystem",
+                    "uco-core:name": "Android",
+                    "uco-observable:manufacturer": "Google",
+                    "uco-observable:version": "4.2.2"
+                },
+                {
+                    "@type": "uco-observable:ComputerSpecification",
+                    "uco-observable:processorArchitecture": "Octa-core",
+                    "uco-observable:cpuFamily": "Exynos 5410 Octa",
+                    "uco-observable:gpuFamily": "Power VR SGX544MP3",
+                    "uco-observable:totalRam": {
+                        "@type": "xsd:long",
+                        "@value": "2147483648"
+                    }
+                }
+            ]
+        }
+    ]
+}

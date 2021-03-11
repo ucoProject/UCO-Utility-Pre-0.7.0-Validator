@@ -1,0 +1,165 @@
+{
+    "@context": {
+        "@vocab": "http://example.org/local#",
+        "kb": "http://example.org/kb#",
+        "draft": "http://example.org/draft#",
+        "olo": "http://purl.org/ontology/olo/core#",
+        "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+        "uco-core": "https://unifiedcyberontology.org/ontology/uco/core#",
+        "uco-observable": "https://unifiedcyberontology.org/ontology/uco/observable#"
+    },
+    "@graph": [
+        {
+            "@id": "kb:sms_message1",
+            "@type": "uco-observable:ObservableObject",
+            "uco-core:hasFacet": [
+                {
+                    "@type": "uco-observable:MessageFacet",
+                    "uco-observable:application": "kb:sms_application1",
+                    "uco-observable:messageText": "Yo dude! This is my new number.",
+                    "uco-observable:from": "kb:phone_account3",
+                    "uco-observable:to": [
+                        "kb:phone_account1"
+                    ],
+                    "uco-observable:sentTime": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2010-01-15T17:59:43.25Z"
+                    }
+                }
+            ]
+        },
+        {
+            "@id": "kb:contact1",
+            "@type": "uco-observable:ObservableObject",
+            "uco-core:hasFacet": [
+                {
+                    "@type": "uco-observable:ContactFacet",
+                    "rdfs:comment": [
+                        "TODO: Should the contactName property be renamed to 'displayName'?",
+                        "TODO: How do we distingish 'Home', 'Work', 'Mobile', etc?",
+                        "NOTE: phone_account3 is missing from this because it's a new account found in the SMS logs that was not in the phonebook.",
+                        "TODO: How do we represent location information? (example: Home and Work)",
+                        "TODO: I assume the screenName property is supposed to point to Digital/Application accounts?"
+                    ],
+                    "uco-observable:firstName": "John",
+                    "uco-observable:lastName": "Doe",
+                    "uco-observable:contactName": "BFF Joe",
+                    "uco-observable:application": "kb:android_phonebook1",
+                    "uco-observable:emailAddress": [
+                        "kb:email_account1"
+                    ],
+                    "phoneNumber": [
+                        "kb:phone_account1",
+                        "kb:phone_account2"
+                    ],
+                    "screenName": []
+                }
+            ]
+        },
+        {
+            "@id": "kb:associated-account1",
+            "@type": "uco-observable:ObservableRelationship",
+            "uco-core:source": "kb:contact1",
+            "uco-core:target": [
+                "kb:phone_account1"
+            ],
+            "uco-core:kindOfRelationship": "has-account",
+            "uco-core:isDirectional": true
+        },
+        {
+            "@id": "kb:associated-account2",
+            "@type": "uco-observable:ObservableRelationship",
+            "uco-core:source": "kb:contact1",
+            "uco-core:target": [
+                "kb:phone_account2"
+            ],
+            "uco-core:kindOfRelationship": "has-account",
+            "uco-core:isDirectional": true
+        },
+        {
+            "@id": "kb:associated-account3",
+            "@type": "uco-observable:ObservableRelationship",
+            "uco-core:source": "kb:contact1",
+            "uco-core:target": [
+                "kb:email_account1"
+            ],
+            "uco-core:kindOfRelationship": "has-account",
+            "uco-core:isDirectional": true
+        },
+        {
+            "@id": "kb:phone_account1",
+            "@type": "uco-observable:ObservableObject",
+            "uco-core:hasFacet": [
+                {
+                    "@type": "uco-observable:AccountFacet",
+                    "rdfs:comment": "TODO: Is the accountType necessary? We know its phone account due to the existence of 'PhoneAccount' (duck type model and all that)",
+                    "uco-observable:accountType": "Phone",
+                    "uco-observable:isActive": true
+                },
+                {
+                    "@type": "uco-observable:PhoneAccountFacet",
+                    "uco-observable:phoneNumber": "1237771337"
+                }
+            ]
+        },
+        {
+            "@id": "kb:phone_account2",
+            "@type": "uco-observable:ObservableObject",
+            "uco-core:hasFacet": [
+                {
+                    "@type": "uco-observable:AccountFacet",
+                    "uco-observable:accountType": "Phone",
+                    "uco-observable:isActive": true
+                },
+                {
+                    "@type": "uco-observable:PhoneAccountFacet",
+                    "uco-observable:phoneNumber": "1234560000"
+                }
+            ]
+        },
+        {
+            "@id": "kb:email_account1",
+            "@type": "uco-observable:ObservableObject",
+            "uco-core:hasFacet": [
+                {
+                    "@type": "uco-observable:AccountFacet",
+                    "uco-observable:accountType": "Email",
+                    "uco-observable:isActive": true
+                },
+                {
+                    "@type": "uco-observable:EmailAccountFacet",
+                    "uco-observable:value": "jdoe@example.com"
+                }
+            ]
+        },
+        {
+            "@id": "kb:phone_account3",
+            "@type": "uco-observable:ObservableObject",
+            "uco-core:hasFacet": [
+                {
+                    "@type": "uco-observable:AccountFacet",
+                    "uco-observable:accountType": "Phone",
+                    "uco-observable:isActive": true
+                },
+                {
+                    "@type": "uco-observable:PhoneAccountFacet",
+                    "uco-observable:phoneNumber": "11235557890"
+                }
+            ]
+        },
+        {
+            "@id": "kb:android_phonebook1",
+            "@type": "uco-observable:ObservableObject",
+            "uco-core:hasFacet": [
+                {
+                    "@type": "uco-observable:ApplicationFacet",
+                    "uco-core:name": "Android Phonebook",
+                    "uco-observable:applicationIdentifier": "com.android.providers.telephony",
+                    "uco-observable:operatingSystem": "kb:os1",
+                    "uco-observable:version": "2.3.4",
+                    "uco-observable:numberOfLaunches": 323
+                }
+            ]
+        }
+    ]
+}

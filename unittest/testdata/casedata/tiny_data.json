@@ -1,0 +1,18 @@
+{
+    "@context": {
+        "@vocab": "http://example.org/local#",
+        "": "http://example.org/kb#",
+        "uco-core": "https://unifiedcyberontology.org/ontology/uco/core#",
+        "case-investigation": "https://unifiedcyberontology.org/ontology/uco/investigation#"
+    },
+    "@id": ":bundle-3b13e958a-d975-41aa-b1bb-029d2b6707cd",
+    "@type": "uco-core:Bundle",
+    "uco-core:object": [
+        {
+            "@id": ":investigation-4586742a-710a-454f-bcb8-b60e230ec1b2",
+            "@type": "case-investigation:Investigation",
+            "uco-core:name": "Crime A",
+            "case-investigation:focus": "Murder"
+        }
+    ]
+}

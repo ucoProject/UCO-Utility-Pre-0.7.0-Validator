@@ -1,0 +1,65 @@
+{
+    "@context": {
+        "@vocab": "http://example.org/local#",
+        "kb": "http://example.org/kb#",
+        "draft": "http://example.org/draft#",
+        "uco-core": "https://unifiedcyberontology.org/ontology/uco/core#",
+        "uco-observable": "https://unifiedcyberontology.org/ontology/uco/observable#"
+    },
+    "@graph": [
+        {
+            "@id": "kb:phone_account1",
+            "@type": "uco-observable:ObservableObject",
+            "uco-core:hasFacet": [
+                {
+                    "@type": "uco-observable:AccountFacet",
+                    "uco-observable:accountIssuer": "kb:ATT",
+                    "uco-observable:isActive": true
+                },
+                {
+                    "@type": "uco-observable:PhoneAccountFacet",
+                    "uco-observable:phoneNumber": "1237771337"
+                }
+            ]
+        },
+        {
+            "@id": "kb:phone_account2",
+            "@type": "uco-observable:ObservableObject",
+            "uco-core:hasFacet": [
+                {
+                    "@type": "uco-observable:AccountFacet",
+                    "uco-observable:accountIssuer": "kb:Sprint",
+                    "uco-observable:isActive": true
+                },
+                {
+                    "@type": "uco-observable:PhoneAccountFacet",
+                    "identifier": "1234560000"
+                }
+            ]
+        },
+        {
+            "@id": "kb:phone_call1",
+            "@type": "uco-observable:ObservableObject",
+            "uco-core:hasFacet": [
+                {
+                    "@type": "uco-observable:PhoneCallFacet",
+                    "uco-observable:callType": "mobile",
+                    "uco-observable:startTime": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2010-01-15T17:59:43.25Z"
+                    },
+                    "uco-observable:endTime": {
+                        "@type": "xsd:dateTime",
+                        "@value": "2010-01-15T18:30:41.25Z"
+                    },
+                    "uco-observable:from": "kb:phone_account1",
+                    "uco-observable:to": "kb:phone_account2",
+                    "uco-observable:duration": {
+                        "@type": "xsd:long",
+                        "@value": 1862
+                    }
+                }
+            ]
+        }
+    ]
+}

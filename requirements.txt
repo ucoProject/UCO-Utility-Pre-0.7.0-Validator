@@ -1,0 +1,4 @@
+# virtualenv python=python3
+
+ontospy
+rdflib
