@@ -2,6 +2,8 @@
 
 ## Description -  (Alpha Release)
 
+The UCO/CASE Validation Toolkit provides the capability to validate JSON-LD data files against a turtle-file based ontology such as the Unified Cyber Ontology (UCO) and Cyber-Investigation Analysis Standard Expression (CASE).
+
 Note - this tool has a number of suggested improvements that may be added in the future. Among these, the tool may present error messages that could be viewed by some as warnings vs errors in ontological representation.
 
 ## Getting Started
@@ -60,7 +62,7 @@ There are minor toolkit setup differences between Linux and Windows, described h
 7. When done, deactivate the virtual environment
  * `(venv) foo\enhanced-case-toolkit>` deactivate
 
-### Executing the tool
+## Executing the tool
 
 As long as the virtual environment is activated, you can now run these scripts.
 
