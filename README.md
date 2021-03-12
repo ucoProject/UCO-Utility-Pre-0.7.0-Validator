@@ -26,10 +26,10 @@ There are minor toolkit setup differences between Linux and Windows, described h
 * $ cd foo
 
 2.  Copy source files into the working directory
-* $ git clone https://gitlab.mitre.org/sbernste/enhanced-case-toolkit.git
+* $ git clone https://github.com/ucoProject/UCO-Utility-Pre-0.6.0-Validator.git
 
 3.  In the tookit directory, create a python3 virtual environment
-* $ cd enhanced-case-toolkit
+* $ cd UCO-Utility-Pre-0.6.0-Validator
 * $ virtualenv --python=python3 venv
 
 4.  Activate the virtual environment
@@ -48,9 +48,9 @@ There are minor toolkit setup differences between Linux and Windows, described h
  * mkdir foo
 2. Copy source files
  *  cd foo
- * `foo>` git clone https://gitlab.mitre.org/sbernste/enhanced-case-toolkit.git
+ * `foo>` git clone https://github.com/ucoProject/UCO-Utility-Pre-0.6.0-Validator.git
 3. Create virtual environment
- * `foo>` cd enhanced_case_toolkit
+ * `foo>` cd UCO-Utility-Pre-0.6.0-Validator
  * `foo\enhanced-case-toolkit>` virtualenv --python=python3 venv
 4. Activate the virtual environment
  * `foo\enhanced-case-toolkit>` venv\Scripts\activate
