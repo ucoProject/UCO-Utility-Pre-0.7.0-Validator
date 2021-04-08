@@ -56,7 +56,7 @@ def postcondition(graph, context):
     and expand apparent prefixes in Literal objects that should be URIs
 
     Arguments:
-        context {prefix:expanded_location}
+        context A Context object
         graph   A rdflib_graph object
 
     Return: tuple (new_graph, {node:line_number})
@@ -82,11 +82,9 @@ def postcondition(graph, context):
         # If obj is a literal and has no datatype, it's one of those ambiguous cases
         # If it has an IRI prefix in the context, expand its prefix and replace with a URIRef
         if isinstance(obj, rdflib.term.Literal) and not obj.datatype:
-            value = str(obj)
-            parts = value.split(':', 1)    # does value look like prefix:stuff?
-            if len(parts) > 1 and parts[0] in context:    # yes, and the prefix is in the context!
-                parts[0] = context[parts[0]]
-                obj = rdflib.term.URIRef(parts[0] + parts[1])
+            uri_object = context.uri_object(str(obj))   # A URIRef or None
+            if uri_object:
+                obj = uri_object
 
         # If obj is a URIRef (maybe just created above!) and has a line number,
         # remove line number from URIRef object
@@ -212,7 +210,7 @@ def embed_line_numbers(text):
            where n is the (possibly multidigit) line number
     '''
     # This regular expressions matches a @type declaration in the json-ld file
-    type_matcher = re.compile(r'( *"@type": *")([\w:#/-]+)(",)')
+    type_matcher = re.compile(r'(\s*"@type":\s*")([\w:#/-]+)(",)')
 
     # Do for each line in text
     lines = text.split('\n')

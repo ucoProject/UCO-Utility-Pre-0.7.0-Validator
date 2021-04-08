@@ -10,8 +10,8 @@ import rdflib
 from rdflib.namespace import OWL, RDF
 from property_constraints import PropertyConstraints
 from message import OntologyError, UnsupportedFeature
-from message import pretty_uri
 from triples import get_spo_dict
+from context import Context
 
 
 
@@ -135,12 +135,6 @@ class ClassConstraints:
         self.onto_class_uri = onto_class_uri
         self.property_constraints_dict = {}         # {property_uri:PropertyConstraints}
 
-    def __str__(self):
-        if self.property_constraints_dict:
-            return '\n'.join([str(property_constraints) for property_constraints in self.property_constraints_dict.values()])
-        else:
-            return '<Empty>'
-
     def set_property_constraints(self, property_uri, property_constraints):
         '''
         Attach Contraint object to specified property_uri.
@@ -190,20 +184,29 @@ class ClassConstraints:
         return required_properties
 
 
-    def describe(self):
+    def describe(self, context=None):
         '''
         Assemble and return a plain-text description of the class and
         property constraints in this object.
         '''
         lines = []
+        if context is None:
+            context = Context()
         for property_constraints in self.property_constraints_dict.values():
             lines.append(property_constraints.describe())
         for required_property in self.get_required_properties():
             lines.append('Class {}: Property {} is required'.format(
-                pretty_uri(self.onto_class_uri), required_property))
+                context.format(self.onto_class_uri), required_property))
         for forbidden_property in self.get_forbidden_properties():
             lines.append('Class {}: Property {} is forbidden'.format(
-                pretty_uri(self.onto_class_uri), forbidden_property))
+                context.format(self.onto_class_uri), forbidden_property))
         if not lines:
             lines.append('Empty')
         return '\n'.join(lines)
+
+    def __str__(self):
+        if self.property_constraints_dict:
+            return '\n'.join([str(property_constraints) for property_constraints in self.property_constraints_dict.values()])
+        else:
+            return '<Empty>'
+

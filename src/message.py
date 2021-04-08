@@ -4,18 +4,14 @@
 # ©2021 The MITRE Corporation. All Rights Reserved.
 
 '''
-This module implements some trivial Message classes.
-Their purpose is to provide a uniform way of formatting
-error messages.
+This module implements the Message class and a few trivial subclasses.
+Their purpose is to provide a uniform way of formatting error messages.
 '''
 import traceback
-from namespace_manager import namespace_manager
 
-class ErrorMessage:
-    '''
-    Base class for error message objects
-    '''
-    message_type = 'Error'
+class Message:
+    message_type = 'Message'
+
     def __init__(self,
             message=None,         # Message text
             message_source=None,  # Name of module, class or function producing this Error
@@ -31,9 +27,9 @@ class ErrorMessage:
         self.caller = traceback.extract_stack(limit=2)[0].name
         # If you add another attribute, be sure to add it to __members()
 
-    def describe(self):
+    def format(self, context):
         '''
-        Build and return a string based on self's attribute values
+        Build and return a message string based on self's attribute values
         '''
         phrases = []
         if self.message_type:
@@ -43,19 +39,20 @@ class ErrorMessage:
 #        if self.caller:   # REMOVED FOR DEMO
 #            phrases.append('{}()'.format(self.caller))
         if self.onto_class_uri:
-            phrases.append('Class {}'.format(pretty_uri(self.onto_class_uri)))
+            phrases.append('Class {}'.format(context.format(self.onto_class_uri)))
         if self.property_uri:
-            phrases.append('Property {}'.format(pretty_uri(self.property_uri)))
-        phrases.append('{}.'.format(self.message))
+            phrases.append('Property {}'.format(context.format(self.property_uri)))
+        if self.message:
+            phrases.append('{}{}.'.format(self.message[0].upper(), self.message[1:]))
         if self.exc:
             phrases.append('{}: {}'.format(type(self.exc), self.exc))
         return ' '.join(phrases)
 
     def __str__(self):
-        return self.describe()
+        return '<{}>'.format(self.message_type)
 
     def __repr__(self):
-        return self.describe()
+        return str(self)
 
     def __members(self):
         '''
@@ -83,6 +80,12 @@ class ErrorMessage:
 
 
 
+class ErrorMessage(Message):
+    '''
+    Base class for error message objects
+    '''
+    message_type = 'Error'
+
 class DataError(ErrorMessage):
     message_type = 'Data Error'
 
@@ -100,27 +103,3 @@ class UnsupportedFeature(ErrorMessage):
 
 class SoftwareBug(ErrorMessage):
     message_type = 'Software Bug'
-
-
-def pretty_uri(uri):
-    '''
-    Arguments:
-        uri   An rdflib.term.URIRef object
-
-    Return:
-        "pretty" string representation of uri
-    '''
-    try:
-        return '<{}>'.format(uri.n3(namespace_manager))
-    except Exception:
-        return '<{}>'.format(uri)
-
-def pretty_uris(uris):
-    '''
-    Arguments:
-        uris   LIST of rdflib.term.URIRef objects
-
-    Return:
-        "pretty" string representation of list of uris
-    '''
-    return '[{}]'.format(', '.join([pretty_uri(uri) for uri in uris]))

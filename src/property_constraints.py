@@ -10,8 +10,7 @@ for a single property of a single ontology class.
 This module implements the PropertyConstraints object
 '''
 from message import OntologyError
-from message import pretty_uri
-
+from context import Context
 
 class PropertyConstraints:
     '''
@@ -48,14 +47,6 @@ class PropertyConstraints:
         self.max_cardinality = None
         self.value_range = None
         self._qualified = None     # True/False/None where None means unset
-
-    def __str__(self):
-        return '<{} {} [{}-{}] {}>'.format(
-            pretty_uri(self.onto_class_uri) if self.onto_class_uri else None,
-            pretty_uri(self.property_uri) if self.property_uri else 'DATATYPE',
-            '?' if self.min_cardinality is None else self.min_cardinality,
-            '?' if self.max_cardinality is None else self.max_cardinality,
-            pretty_uri(self.value_range) if self.value_range else '?')
 
     def add_min_cardinality(self, min_cardinality):
         '''
@@ -341,7 +332,7 @@ class PropertyConstraints:
         return error_messages
 
 
-    def describe(self):
+    def describe(self, context=None):
         '''
         Assemble and return a plain-text description of these PropertyConstraints
 
@@ -350,10 +341,12 @@ class PropertyConstraints:
         '''
         value = lambda n: 'value' if n == 1 else 'values'
         phrases = []
+        if context is None:
+            context = Context()
         if self.onto_class_uri:
-            phrases.append('Class {}'.format(pretty_uri(self.onto_class_uri)))
+            phrases.append('Class {}'.format(context.format(self.onto_class_uri)))
         if self.property_uri:
-            phrases.append('Property {}'.format(pretty_uri(self.property_uri)))
+            phrases.append('Property {}'.format(context.format(self.property_uri)))
         else:
             phrases.append('Property')
 
@@ -377,8 +370,6 @@ class PropertyConstraints:
 
         return ' '.join(phrases)
 
-
-
     def _get_ontology_error(self, message):
         '''
         Arguments:
@@ -396,6 +387,15 @@ class PropertyConstraints:
         Two instances of this class are equal if the __member attributes are equal
         '''
         return (self.onto_class_uri, self.property_uri, self.min_cardinality, self.max_cardinality, self.value_range)
+
+
+    def __str__(self):
+        return '<{} {} [{}-{}] {}>'.format(
+            self.onto_class_uri if self.onto_class_uri else None,
+            self.property_uri if self.property_uri else 'DATATYPE',
+            '?' if self.min_cardinality is None else self.min_cardinality,
+            '?' if self.max_cardinality is None else self.max_cardinality,
+            self.value_range if self.value_range else '?')
 
     def __eq__(self, other):
         '''

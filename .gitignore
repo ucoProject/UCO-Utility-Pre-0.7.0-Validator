@@ -3,3 +3,10 @@ notes
 playpen
 __pycache__
 venv
+data
+deprecated
+legal
+unittest
+build
+backup_of_data
+backup_of_unittest
