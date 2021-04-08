@@ -15,11 +15,12 @@ import os
 import tempfile
 from ontospy import Ontospy
 import serializer
-import precondition
+from precondition import precondition, postcondition
+from context import Context
 
-VERSION = '1.0'   # Appears in the metadata when serialized
+VERSION = '1.1'   # Appears in the metadata when serialized
 
-def get_casedata(path, output_filepath=None, verbose=True, **kwargs):
+def get_casedata(path, output_filepath=None, verbose=False, **kwargs):
     '''
     If path is a serialized casedata file, deserialize it and return it.
     If path is file containing valid json-ld, ingest it.
@@ -47,8 +48,14 @@ def get_casedata(path, output_filepath=None, verbose=True, **kwargs):
 
     # If path is a serialized casedata file, deserialize it and return casedata
     try:
-        identifier, _metadata, casedata.__dict__ = serializer.deserialize(path)
+        identifier, metadata, casedata.__dict__ = serializer.deserialize(path)
         if identifier == serializer.CASEDATA:
+            if metadata['version'] != VERSION:
+                print('{} was serialized with a different version of the toolkit.  Use this command to reserialize:'.format(path))
+                print()
+                print('    serialize {}'.format(metadata['path']))
+                print()
+                raise Exception('{} was serialized with a different version of the toolkit.'.format(path))
             return casedata
     except serializer.DeserializeError:
         pass
@@ -78,6 +85,7 @@ class CaseData:
         self.jsonld_filepath = None   # Path to json-ld file
         self.graph = None             # rdflib.Graph of json-ld data
         self.line_numbers = {}        # {node:line_number} where node is a URIRef or a BNode
+        self.bindings = []            # [(prefix, uri)] from ontospy.namespaces
 
 
     def serialize(self, output_filepath, comment):
@@ -113,9 +121,10 @@ def _read_jsonld_file(jsonld_filepath, output_filepath, verbose, **kwargs):
 
     Return:  dictionary
         {
-            'jsonld_filepath':filepath,      # Full path to json-ld file
-            'graph':rdflib_graph_obj,        # Json-ld data decomponsed to an rdflib.Graph of triples
-            'line_numbers':line_numbers_dict # {node:line_number}, where node is a URIRef or a BNode
+            'jsonld_filepath':filepath,        # Full path to json-ld file
+            'graph':rdflib_graph_obj,          # Json-ld data decomponsed to an rdflib.Graph of triples
+            'line_numbers':line_numbers_dict   # {node:line_number}, where node is a URIRef or a BNode
+            'bindings':(qualiifer:uri_string)  # List of binding tuples, e.g. ('core', 'http://unifiedcyberontology.org/core')
         }
     '''
     # Read the jsonld file  (could raise exception)
@@ -123,7 +132,7 @@ def _read_jsonld_file(jsonld_filepath, output_filepath, verbose, **kwargs):
         text = infile.read()
 
     # Precondition it
-    preconditioned_text = precondition.precondition(text)
+    preconditioned_text = precondition(text)
 
     # If specified, save text in output_filepath
     if output_filepath:
@@ -142,11 +151,15 @@ def _read_jsonld_file(jsonld_filepath, output_filepath, verbose, **kwargs):
         temp_filepath = os.path.join(tempdirname, 'preconditioned.json')
         with open(temp_filepath, 'w') as outfile:
             outfile.write(preconditioned_text)
-        graph = Ontospy(
+        ontospy = Ontospy(
             uri_or_path=temp_filepath,
             rdf_format='jsonld',
             verbose=verbose,
-            **kwargs).rdflib_graph
+            **kwargs)
+
+    graph = ontospy.rdflib_graph
+    context = Context().populate(ontospy.namespaces)
+
 
     # If ontospy cannot read the file, it prints an error message
     # and returns an object with a zero-length graph
@@ -156,18 +169,12 @@ def _read_jsonld_file(jsonld_filepath, output_filepath, verbose, **kwargs):
 
     # Build new graph by remove the embedded line number from ontospy's graph
     # and remember the line numbers in mapping {Node:line_number}
-    graph, line_numbers_dict = precondition.postcondition(graph, json.loads(preconditioned_text)['@context'])
-
-    #for s,p,o in graph.triples((None, None, None)):
-    #    print(repr(s))
-    #    print(repr(p))
-    #    print(repr(o))
-    #    print()
-    #pprint.pprint(line_numbers_dict)
+    graph, line_numbers_dict = postcondition(graph, context)
 
     # Construct and return results
     return {
         'jsonld_filepath':jsonld_filepath,
         'graph':graph,
+        'bindings':context.bindings,
         'line_numbers':line_numbers_dict
     }

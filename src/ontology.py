@@ -12,16 +12,16 @@ derivied from applying Ontospy to the input files.
 from copy import deepcopy
 import datetime
 import os
+import sys
 from ontospy import Ontospy
-from rdflib.namespace import OWL, RDFS
+from rdflib.namespace import OWL, RDFS, XSD
 import serializer
 from class_constraints import get_class_constraints, ClassConstraints
 from datatype_constraints import get_datatype_constraints
-import namespace_manager
+from context import Context
 from message import OntologyError, UnsupportedFeature
-from message import pretty_uri, pretty_uris
 
-VERSION = '1.0'   # Appears in the metadata when serialized
+VERSION = '1.1'   # Appears in the metadata when serialized, compared with serialized value before deserializing
 
 def get_ontology(path, verbose=True, **kwargs):
     '''
@@ -37,30 +37,30 @@ def get_ontology(path, verbose=True, **kwargs):
     Return:
         An Ontology object
 
-    Side effect:
-        This function populates namespace_manager.namespace_manager
-
     Raise:
         Exception if path is not a serialized ontology file or a directory containing turtle files
     '''
     # Start with empty Ontology object
     ontology = Ontology()
 
-    # If path is a serialized ontology file, deserialize it and populate namespace_manager
+    # If path is a serialized ontology file, deserialize it and set context for error messages
     if os.path.isfile(path) and serializer.get_identifier(path) == serializer.ONTOLOGY:
-        _identifer, _metadata, ontology.__dict__ = serializer.deserialize(path)
-        namespace_manager.populate(ontology.constraints.keys())
+        _identifer, metadata, ontology.__dict__ = serializer.deserialize(path)
+        if metadata['version'] != VERSION:
+            print('{} was serialized with a different version of the toolkit.  Use this command to reserialize:'.format(path))
+            print()
+            print('    serialize {}'.format(metadata['path']))
+            print()
+            sys.exit(1)
 
-    # If path is a directory containing turtle files, build Ontology object AND populate namespace_manager
-    # Note: _read_turtle_files() populates the namespace_manager so the ontology errors can use it
+    # If path is a directory containing turtle files, build Ontology
+    # Note that _read_turtle_files sets the context for error messages
     elif os.path.isdir(path) and [filename for filename in os.listdir(path) if filename.endswith('.ttl')]:
         ontology.__dict__ = _read_turtle_files(path, verbose, **kwargs)
 
     # If path is something else, raise
     else:
         raise Exception('{} is neither a serialized ontology file nor a directory containing turtle files'.format(path))
-
-    # Populate the namespace from the ontology classes
 
     # Return the ontology object
     return ontology
@@ -76,12 +76,16 @@ class Ontology:
         constraints       {URIRef(onto_class):ClassConstraints|DatatypeConstraints|None} (derived from ontospy.all_classes
         property_ranges   {property_uri:range_uri|None}  (derived from ontospy.all_properties)
         error_messages    {ErrorMessage}   Set of instances of ErrorMessage or subclass objects
+        bindings          [(prefix, uri)]  List of namespace mappings from ontospy.namespaces
+        ancestor_classes  {class_uri:[ancestor_class_uri]}  Classes and their ancestor classes
     '''
     def __init__(self):
         self.turtle_dirpath = None   # The path to the directory containing the turtle files
         self.constraints = {}        # {URIRef(onto_class):ClassConstraints|DatatypeConstraints|None}
         self.property_ranges = {}    # {property_uri:range_uri|None}
         self.error_messages = {}     # {ErrorMessage}
+        self.bindings = []           # [(prefix, uri)] from ontospy.namespaces
+        self.ancestor_classes = {}   # {class_uri:[ancestor_class_uri]}
 
     def serialize(self, output_filepath, comment):
         '''
@@ -101,6 +105,7 @@ class Ontology:
             'md5': dir_hash,
             'manifest': dir_manifest
         }
+        print('Writing serialized ontology to {}'.format(output_filepath))
         serializer.serialize(identifier, metadata, self.__dict__, output_filepath)
 
 
@@ -116,10 +121,12 @@ def _read_turtle_files(turtle_dirpath, verbose=True, **kwargs):
 
     Return:  dictionary
         {
-            'turtle_dirpath':dirpath, # Path to the directory containing the turtle files
-            'property_ranges':value,  # {property_uri:range_uri|None}  (derived from ontospy.all_properties)
-            'constraints':value,      # {URIRef(onto_class):constraints} (derived from ontospy.all_classes)
-            'error_messages':[errmsg] # List of unique ErrorMessage objects
+            'turtle_dirpath':dirpath,   # Path to the directory containing the turtle files
+            'property_ranges':value,    # {property_uri:range_uri|None}  (derived from ontospy.all_properties)
+            'constraints':value,        # {URIRef(onto_class):constraints} (derived from ontospy.all_classes)
+            'error_messages':[errmsg],  # List of unique ErrorMessage objects
+            'bindings':[(qualifier:uri_string)], # List of binding tuples, e.g. ('core','http://unifiedcyberontology.org/core')
+            'ancestor_classes'          # Classes and their ancestors {class_uri:[ancestor_class_uri]}
         }
         where constraints is an instance of ClassConstraints, DatatypeConstraints or None
     '''
@@ -128,9 +135,7 @@ def _read_turtle_files(turtle_dirpath, verbose=True, **kwargs):
 
     # Step 1.  Build Ontospy
     ontospy = Ontospy(uri_or_path=turtle_dirpath, rdf_format='turtle', verbose=verbose, **kwargs)
-
-    # Step 1A.  Populate namespace_manager
-    namespace_manager.populate([onto_class.uri for onto_class in ontospy.all_classes])
+    context = Context().populate(ontospy.namespaces)
 
     # Step 2.  Get naive constraints for each class
     simple_constraints_dict = {}    # {URIRef(class):ClassConstraints|DatatypeConstraints|None}
@@ -159,21 +164,63 @@ def _read_turtle_files(turtle_dirpath, verbose=True, **kwargs):
         ontospy_property_ranges[onto_property.uri] = [property_range.uri for property_range in onto_property.ranges]
         ontospy_property_triples[onto_property.uri] = onto_property.triples
 
-    property_ranges, errmsgs = _get_property_ranges(ontospy_property_ranges, ontospy_property_triples)
+    property_ranges, errmsgs = _get_property_ranges(ontospy_property_ranges, ontospy_property_triples, context)
     error_messages.update(errmsgs)
 
     # Step 5.  Check that range constraints are consistent with general property constraints
-    errmsgs = _check_range_consistency(simple_constraints_dict, property_ranges)
+    errmsgs = _check_range_consistency(simple_constraints_dict, property_ranges, context)
     error_messages.update(errmsgs)
 
+    # Step 6.  Build class-ancestor lookup table
+    ancestor_classes = _build_ancestor_classes(ontospy.all_classes, context)   # {class_uri:[ancestor_class_uri]}
 
     # Construct and return dictionary
     return {
         'turtle_dirpath': turtle_dirpath,
         'property_ranges': property_ranges,
         'constraints': net_constraints,
-        'error_messages': sorted(list(error_messages), key=lambda x:(x.onto_class_uri, x.property_uri))
+        'error_messages': sorted(list(error_messages), key=lambda x:(x.onto_class_uri, x.property_uri)),
+        'bindings': context.bindings,
+        'ancestor_classes': ancestor_classes
     }
+
+
+
+def _build_ancestor_classes(all_onto_classes, context):
+    '''
+    Arguments
+        all_onto_classes   List of ontoClass objects (from ontospy.all_classes)
+        context            Ontology Context object
+
+    Return:
+        Dictionary {class_uri:[ancestor_class_uri]} of classes and their ancestors
+
+    Note:
+        These custom hierarchy relations are included in the returned dictionary
+            *  All vocab and vocab1 classes have xsd:string as an ancestor
+            *  xsd:integer has xsd:long as an ancestor
+            *  xsd:decimal has xsd:float as an ancestor
+    '''
+    # Collect ancestors from ontospy  {onto_class:[ancestor_onto_class]}
+    onto_class_ancestors = {}
+    for onto_class in all_onto_classes:
+        onto_class_ancestors[onto_class] = onto_class.ancestors()
+
+    # Convert onto_class_ancestors to {class_uri:[ancestor_class_uris]}
+    ancestor_classes = {child_class.uri:[ancestor_class.uri for ancestor_class in ancestor_classes] \
+                       for child_class, ancestor_classes in onto_class_ancestors.items()}
+
+    # Customization: add xsd:string as ancestor of all uris in vocab: or vocab1: namespace
+    for class_uri, ancestor_class_uris in ancestor_classes.items():
+        if context.split_qname(context.qname(class_uri))[0] in ('vocab', 'vocab1'):
+            ancestor_class_uris.append(XSD.string)
+
+    # Customization: add integer/long and decimal/float relations
+    ancestor_classes[XSD.integer] = [XSD.long]
+    ancestor_classes[XSD.decimal] = [XSD.float]
+
+    # Return the result  {class_uri:[ancestor_class_uris]}
+    return ancestor_classes
 
 
 
@@ -293,7 +340,7 @@ def _inherit_constraints(constraints, parent_child_class_dict):
 
 
 
-def _get_property_ranges(ontospy_property_ranges, ontospy_property_triples):
+def _get_property_ranges(ontospy_property_ranges, ontospy_property_triples, context):
     '''
     This function belongs in the Ontology class.
     It is implemented outside the Ontology class to facilitate unit testing
@@ -305,6 +352,7 @@ def _get_property_ranges(ontospy_property_ranges, ontospy_property_triples):
     Arguments:
         ontospy_property_ranges   {property_uri:[range_uris]}
         ontospy_property_triples  {property_uri:[triples]}
+        context                   Ontology Context object
 
     Return:
         property_ranges  {property_uri:range_uri|None}
@@ -337,7 +385,7 @@ def _get_property_ranges(ontospy_property_ranges, ontospy_property_triples):
             error_messages.append(OntologyError(
                 message='Property has {} ranges {}'.format(
                     len(range_uris),
-                    pretty_uris(range_uris)),
+                    context.format(range_uris)),
                 property_uri = property_uri))
             continue
 
@@ -350,7 +398,7 @@ def _get_property_ranges(ontospy_property_ranges, ontospy_property_triples):
 
 
 
-def _check_range_consistency(all_constraints, property_ranges):
+def _check_range_consistency(all_constraints, property_ranges, context):
     '''
     This function belongs in the Ontology class.
     It is implemented outside the Ontology class to facilitate unit testing
@@ -361,6 +409,7 @@ def _check_range_consistency(all_constraints, property_ranges):
     Arguments:
         all_constraints   {URIRef(onto_class):ClassConstraints|DatatypeConstraints|None} (ontology.constraints)
         property_ranges   {property_uri:range_uri|None}    (derived from ontospy.all_properties)
+        context           Ontology Context object
 
     Return:
         List of ErrorMessage objects
@@ -389,7 +438,7 @@ def _check_range_consistency(all_constraints, property_ranges):
             # Make sure property is in onto_property_ranges
             if not property_uri in property_ranges:
                 error_messages.append(OntologyError(
-                    message='property {} missing from ontology property list'.format(pretty_uri(property_uri)),
+                    message='property {} missing from ontology property list'.format(context.format(property_uri)),
                     onto_class_uri=onto_class_uri,
                     property_uri=property_uri))
                 continue
@@ -400,9 +449,9 @@ def _check_range_consistency(all_constraints, property_ranges):
             # Compare the owl property constraint with ontospy's opinion
             if range_uri and range_uri != property_constraints.value_range:
                 error_messages.append(OntologyError(
-                    message='owl subclass constraint {} does not match explicit property constraint {}'.format(
-                        pretty_uri(property_constraints.value_range),
-                        pretty_uri(range_uri)),
+                    message='owl subclass constraint {} does not match property constraint {}'.format(
+                        context.format(property_constraints.value_range),
+                        context.format(range_uri)),
                     onto_class_uri=onto_class_uri,
                     property_uri=property_uri))
 

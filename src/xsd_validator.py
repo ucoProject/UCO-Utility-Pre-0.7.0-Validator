@@ -10,6 +10,7 @@ from io import StringIO, BytesIO
 import re
 from xml.sax.saxutils import escape
 from lxml import etree
+import rdflib
 from rdflib.namespace import XSD    # Namespace('http://www.w3.org/2001/XMLSchema#')
 from message import ErrorMessage
 

@@ -17,6 +17,7 @@ import serializer
 from ontology import get_ontology
 from casedata import get_casedata
 from validator import validate
+from context import Context
 
 def parse_args(args):
     '''
@@ -154,19 +155,21 @@ def main():
     # Load the ontology file and print the error messages
     print('ONTOLOGY {}'.format(args.ontology_path))
     ontology = get_ontology(args.ontology_path)
+    context = Context().populate(ontology.bindings)
     for errmsg in ontology.error_messages:
-        print(errmsg)
+        print(errmsg.format(context))
 
 
     # Do for each data file
     for filepath in args.data_filepaths:
 
         # Validate the data file against the ontology file and print error messages
-        print('\n\nCASEDATA {}'.format(filepath))
+        print('\n\nVALIDATING {}'.format(filepath))
         case_data = get_casedata(filepath)
+        context = Context().populate(case_data.bindings)
         errmsgs = validate(ontology, case_data)
         for errmsg in errmsgs:
-            print(errmsg)
+            print(errmsg.format(context))
 
     # Done
     sys.exit(0)

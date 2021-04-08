@@ -1,6 +1,6 @@
 # UCO-Utility-Pre-0.7.0-Validator
 
-## Description -  (Alpha Release)
+## Description -  (Beta Release  Version 1.1)
 
 The UCO/CASE Validation Toolkit provides the capability to validate JSON-LD data files against a turtle-file based ontology such as the Unified Cyber Ontology (UCO) and Cyber-Investigation Analysis Standard Expression (CASE).
 
