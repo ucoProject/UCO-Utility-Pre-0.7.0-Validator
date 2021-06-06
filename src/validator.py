@@ -8,13 +8,15 @@ This module is where the ontology and casedata meet.
 '''
 import pprint  # For debug
 import rdflib
-from rdflib.namespace import RDF, XSD
+from rdflib.namespace import RDF, RDFS, XSD
 from triples import get_spo_dict
 from class_constraints import ClassConstraints
 from message import DataError, UnsupportedFeature, ConstraintError
 from datatype_constraints import DatatypeConstraints
 from xsd_validator import validate_xsd
 from context import Context
+
+OLO=rdflib.Namespace('http://purl.org/ontology/olo/core#')
 
 
 def validate(ontology, case_data):
@@ -37,9 +39,9 @@ def validate(ontology, case_data):
         ontology.constraints, ontology.property_ranges, ontology.ancestor_classes, context)
 
     # Return error messages sorted by line number
+    error_messages = list(set(error_messages))  # keep unique messages only
     error_messages.sort(key=lambda x: x.line_number if x.line_number else 0)
     return error_messages
-
 
 def validate_case_data(spo_dict, line_numbers, ontology_constraints, ontology_property_ranges,
                        ontology_ancestor_classes, context):
@@ -67,6 +69,13 @@ def validate_case_data(spo_dict, line_numbers, ontology_constraints, ontology_pr
         # Get Subject's type, which should be a Class in the ontology
         # Make sure there's exactly one type. If it isn't, skip this Subject
         subject_type_uris = po_dict.get(RDF.type)
+
+        # If there are any olo properties, unsupported feature
+        if has_olo_property(po_dict):
+            error_messages.append(UnsupportedFeature(
+                message='ordered list (olo) not supported',
+                line_number=line_number))
+            continue
 
         # If subject has no type, error
         if not subject_type_uris:
@@ -160,7 +169,7 @@ def validate_case_data(spo_dict, line_numbers, ontology_constraints, ontology_pr
                     errmsg.property_uri = property_uri
                     errmsg.onto_class_uri = subject_type_uri
                 error_messages.extend(errmsgs)
-        #    #print('Validating literals for {} got {} error messages'.format(subject, len(errmsgs)))
+            #print('Validating literals for {} got {} error messages'.format(subject, len(errmsgs)))
 
     # Done!  Return error messages
     return error_messages
@@ -230,10 +239,14 @@ def validate_range_constraints(pvt_dict, ontology_property_ranges, ancestor_clas
     # Check property ranges for each property
     for property_uri, vt_dict in pvt_dict.items():
 
+        # Skip metadata properties
+        if property_uri in (RDFS.comment, RDFS.label):
+            continue
+
         # Identify property's range
         # If there's a class_constraint and it has a range, use that range.
         # Otherwise if there's a "global" property range, use that range.
-        # Otherwise, there's no range, do there's nothing to check
+        # Otherwise, there's no range, this is an unknown property so reject it
         property_range = None
         if class_constraints:
             property_constraints = class_constraints.get_property_constraints(property_uri)
@@ -242,6 +255,11 @@ def validate_range_constraints(pvt_dict, ontology_property_ranges, ancestor_clas
 
         if not property_range:
             property_range = ontology_property_ranges.get(property_uri)   # could still be None
+
+        if not property_range:   # unknown property
+            error_messages.append(ConstraintError(
+                message='unknown property',
+                property_uri=property_uri))
 
 
         # If there's a property range, check that the property range is the same as or an ancestor of the value type
@@ -378,6 +396,11 @@ def get_value_type(value, spo_dict, context):
             errmsg = DataError(message='missing link <{}>'.format(link))
             return None, [errmsg]
 
+        # If it's a BNode and it has any olo properties, unsupported feature
+        if has_olo_property(po_dict):
+            errmsg = UnsupportedFeature(message='ordered lists (olo) not supported')
+            return None, [errmsg]
+
         # Get the BNode or URIRef's types
         datatypes = po_dict.get(RDF.type)   # SET of classes (URIRefs), should have only one member
 
@@ -400,3 +423,15 @@ def get_value_type(value, spo_dict, context):
             message='unrecognized data value {} of type {}, expected a Literal, URIRef or BNode'.format(
                 value, type(value)))
         return None, [errmsg]
+
+
+def has_olo_property(po_dict):
+    '''
+    Arguments:
+        po_dict     dictionary {property:object}
+
+    Return:
+        True  if (at least) one of the properties is an ordered list (olo)
+        False if none of the properties are ordered list (olo)
+    '''
+    return any([OLO in prop for prop in po_dict.keys()])
