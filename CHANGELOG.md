@@ -18,3 +18,9 @@
 
 ### Added
 - Changelog file
+
+
+## [1.2] - 2021-06-05
+### Fixed
+- Fixed error messages to flag ordered lists (olo) as an UnsupportedFeature
+- Fixed validator to flag unknown properties as errors
