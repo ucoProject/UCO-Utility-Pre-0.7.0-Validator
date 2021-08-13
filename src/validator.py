@@ -291,7 +291,7 @@ def validate_literal(literal, constraints, context):
                    message='Literal {} has datatype that is not a URIRef: {}'.format(literal, literal.datatype))]
 
     # If Literal datatype is an XSD type, validate it and return list of error messages
-    if str(literal.datatype).startswith(XSD) or str(literal.datatype).startswith('xsd:') or str(literal.datatype).startswith('xs:'):
+    if str(literal.datatype).startswith(str(XSD)) or str(literal.datatype).startswith('xsd:') or str(literal.datatype).startswith('xs:'):
         return validate_xsd(str(literal), literal.datatype)
 
     # If we're here, Literal datatype is a URIRef and not an XSD type.
