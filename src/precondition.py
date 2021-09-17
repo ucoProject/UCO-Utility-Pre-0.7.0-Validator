@@ -16,6 +16,7 @@ by non-empty ones.
 (and remembers where they are) undoes the empty prefixes, and
 compensates for some of ontospy's deficiencies.
 '''
+import logging
 import re
 import string
 import rdflib
@@ -135,6 +136,9 @@ def autogenerate_empty_prefix(text, prefix_length, alphabet):
     # If we found all possible strings (this is really unlikely),
     # we probably need to increase the string length
     if len(non_candidate_prefix_strings) == len(alphabet):
+        logging.getLogger().setLevel(logging.DEBUG)
+        logging.debug("non_candidate_prefix_strings - alphabet = %r.", non_candidate_prefix_strings - alphabet)
+        logging.error("Review the above set-difference for undefined prefixes that seem to be in your data.")
         raise Exception('Could not find unused prefix sequence!')
 
     # Look for a prefix string that is not is the non_candidate set
