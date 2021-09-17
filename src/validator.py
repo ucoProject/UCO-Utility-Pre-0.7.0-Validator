@@ -266,6 +266,7 @@ def validate_range_constraints(pvt_dict, ontology_property_ranges, ancestor_clas
         if property_range:
             for value, value_type in vt_dict.items():
                 if not (property_range == value_type or property_range in ancestor_classes.get(value_type, [])):
+                    #import pdb; pdb.set_trace()
                     error_messages.append(ConstraintError(
                         message="property's value {} is a {} but must be a {}".format(
                             '' if isinstance(value, rdflib.term.BNode) else value,
@@ -309,7 +310,7 @@ def validate_literal(literal, constraints, context):
                    message='Literal {} has datatype that is not a URIRef: {}'.format(literal, literal.datatype))]
 
     # If Literal datatype is an XSD type, validate it and return list of error messages
-    if str(literal.datatype).startswith(XSD) or str(literal.datatype).startswith('xsd:') or str(literal.datatype).startswith('xs:'):
+    if str(literal.datatype).startswith(str(XSD)) or str(literal.datatype).startswith('xsd:') or str(literal.datatype).startswith('xs:'):
         return validate_xsd(str(literal), literal.datatype)
 
     # If we're here, Literal datatype is a URIRef and not an XSD type.

@@ -134,7 +134,7 @@ def autogenerate_empty_prefix(text, prefix_length, alphabet):
 
     # If we found all possible strings (this is really unlikely),
     # we probably need to increase the string length
-    if len(non_candidate_prefix_strings) == len(alphabet):
+    if len(non_candidate_prefix_strings) == len(alphabet)**prefix_length:
         raise Exception('Could not find unused prefix sequence!')
 
     # Look for a prefix string that is not is the non_candidate set
