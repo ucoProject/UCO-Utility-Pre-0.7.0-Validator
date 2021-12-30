@@ -113,7 +113,7 @@ def check_data_paths(data_paths):
 
             # If it's a valid json file, cool.
             try:
-                json.load(open(path))
+                json.load(open(path,mode="r", encoding="utf-8"))
                 continue
             except (json.decoder.JSONDecodeError, UnicodeDecodeError):
                 pass
