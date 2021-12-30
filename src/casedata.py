@@ -128,7 +128,7 @@ def _read_jsonld_file(jsonld_filepath, output_filepath, verbose, **kwargs):
         }
     '''
     # Read the jsonld file  (could raise exception)
-    with open(jsonld_filepath, 'r') as infile:
+    with open(jsonld_filepath, 'r',  encoding="utf-8") as infile:
         text = infile.read()
 
     # Precondition it
@@ -149,7 +149,7 @@ def _read_jsonld_file(jsonld_filepath, output_filepath, verbose, **kwargs):
     # ------------------------------------------------------------------
     with tempfile.TemporaryDirectory() as tempdirname:
         temp_filepath = os.path.join(tempdirname, 'preconditioned.json')
-        with open(temp_filepath, 'w') as outfile:
+        with open(temp_filepath, 'w',  encoding="utf-8") as outfile:
             outfile.write(preconditioned_text)
         ontospy = Ontospy(
             uri_or_path=temp_filepath,
